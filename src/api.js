@@ -1,11 +1,11 @@
 export async  function getTemperature(city){
     
     
-    let lat_long_array=getLatLongApi(city);
-
+    let lat_long_array=getCoordinate(city);
+    
     let weather_array=[];
     weather_array=await getTempApi(lat_long_array[0],lat_long_array[1]);
-    console.log("hlo",weather_array.current_weather);
+    console.log("hlo",weather_array.main);
 
     return weather_array;
 }
@@ -20,16 +20,17 @@ async function getTempApi(lat, long){
     console.log(data);
     return data;
 }
-function getLatLongApi(city){
+function getCoordinate(city){
     const city_latlong={
-        "Lisbon":[38.722252,-9.139337],
-        "Alcochete":[38.756031,-8.961030],
-        "Faro":[40.707428,-73.922844],
-        "Paris":[48.856613,2.352222],
-        "Brasilia":[-15.826691,-47.921822],
-        "New York":[40.730610,-73.935242]
+        "Lisbon":[38.722252,-9.139337,"./images/aayush-gupta-lisbon.jpg"],
+        "Alcochete":[38.756031,-8.961030,"./images/frankfurt-photographer-Alcochete.jpg"],
+        "Faro":[40.707428,-73.922844,"./images/kobu-agency-faro.jpg"],
+        "Paris":[48.856613,2.352222,"./images/earth-Paris.jpg"],
+        "Brasilia":[-15.826691,-47.921822,"./images/ckturistando-Brasilia.jpg"],
+        "New York":[40.730610,-73.935242,"./images/earth-Paris.jpg"]
     }
 
-    return city_latlong[city];
+    city.image=city_latlong[city.name][2];
+    return city_latlong[city.name];
     
 }
