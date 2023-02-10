@@ -3,7 +3,7 @@ import { loadMain } from "./app";
 import './style.scss';
 async function main(){
     let city={
-        "name":"Brasilia",
+        "name":"Alcochete",
         "image":""
     }
     let weather_array=await getTemperature(city);
