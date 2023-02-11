@@ -21,9 +21,12 @@ async function getTempApi(lat, long){
     return data;
 }
 function getCoordinate(city){
+
+    //create the city object property for every item in that array that you know that is
+
     const city_latlong={
         "Lisbon":[38.722252,-9.139337,"./images/aayush-gupta-lisbon.jpg"],
-        "Alcochete":[38.756031,-8.961030,"./images/frankfurt-photographer-Alcochete.jpg"],
+        "Alcochete":[38.756031,-8.961030,"./images/alcochete-clear.png"],
         "Faro":[40.707428,-73.922844,"./images/kobu-agency-faro.jpg"],
         "Paris":[48.856613,2.352222,"./images/earth-Paris.jpg"],
         "Brasilia":[-15.826691,-47.921822,"./images/ckturistando-Brasilia.jpg"],

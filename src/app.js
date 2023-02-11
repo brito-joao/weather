@@ -1,3 +1,5 @@
+import { getTemperature } from "./api";
+
 export function loadMain(weather_array,city){
     const body= document.querySelector("body");
     const window =document.createElement("div");
@@ -8,8 +10,9 @@ export function loadMain(weather_array,city){
     const city_label=document.createElement("p");
     const feels_like_label=document.createElement("p");
     const cloud_label=document.createElement("p");
+    const menu_button=document.createElement("button");
+    const github_button=document.createElement("a");
     
-    const selected_option=document.createElement("p");
 
     
     
@@ -26,7 +29,15 @@ export function loadMain(weather_array,city){
     body.innerHTML="";
     city_label.innerText=city.name;
     image_city.src=city.image;
-    
+    menu_button.innerText="☰";
+    github_button.innerText="My Github";
+    github_button.href="https://github.com/brito-joao";
+    github_button.target="_blank";
+    github_button.rel="noopener noreferrer";
+
+
+    github_button.setAttribute("class","gitbutton");
+    menu_button.setAttribute("class","menubutton");
     background.setAttribute("class","background");
     temperature_label.setAttribute("class","temperatureMain");
     city_label.setAttribute("class","city");
@@ -36,20 +47,27 @@ export function loadMain(weather_array,city){
     cloud_label.setAttribute("class","feels");
     
     
+    menu_button.addEventListener("click",()=>{
+        //body.style.transition = "height 3s ease-in";
+        
+        setTimeout(function(){
+            loadMenu(city);
+        },100);
+    })
     
-    weather_info_label.innerText=`Today has ${temperature_object.clouds}, with temperatures reaching up to ${temperature_object.temperatureMax}. Winds will be light and variable. UV levels will be high, so be sure to wear sunscreen when outside.`;
+    weather_info_label.innerText=`Today has ${temperature_object.clouds}, with temperatures reaching up to ${temperature_object.temperatureMax}. Winds will be light and variable. `;
     cloud_label.innerText=`${temperature_object.clouds}`;
     feels_like_label.innerText=`H:${temperature_object.temperatureMax}   L:${temperature_object.temperatureMin}`;
     temperature_label.innerText=temperature_object.temperature;
 
-
+    window.appendChild(menu_button);
     window.appendChild(temperature_label);
     window.appendChild(cloud_label);
     window.appendChild(feels_like_label);
     window.appendChild(city_label);
 
     background.appendChild(weather_info_label);
-    //background.appendChild(createChangeCity(background));
+    background.appendChild(github_button);
     
 
     body.appendChild(window);
@@ -57,26 +75,41 @@ export function loadMain(weather_array,city){
     body.appendChild(background);
 }
 
-function createChangeCity(background){
-
+async function loadMenu(city){
+    const body = document.querySelector("body");
+    const cities_div=document.createElement("div");
     
-    const cities=["Lisbon","Paris","Alcochete","Brasilia","Faro"];
+    
+    let cities=["Lisbon","Alcochete","Paris","Brasilia","Faro"];
+    body.innerHTML="";
 
-    var changeCity = document.createElement('select');
-    background.appendChild(changeCity);
+    cities.forEach(async city_name => {
+        console.log(city_name, "hello ");
+        const city_label=document.createElement("div");
+        const city_name_label=document.createElement("p");
+        const city_temperature_label=document.createElement("p");
+        const background=document.createElement("img");
 
-    for (var i = 0; i < cities.length; ++i) {
-        var option = document.createElement('option');
 
-        if (i == 0) {
-            option.setAttribute('disabled', 'disabled');
-            option.setAttribute('selected', 'selected');
-        } // end of if loop
+        let city={
+            "name":city_name,
+            "image":""
+        }
+        city_name_label.innerText=city_name;
+        let weather_array=await getTemperature(city);
+        city_temperature_label.innerText=`${Math.round(weather_array.main.temp-272.15)}°`;
+        city_label.addEventListener("click", ()=>{
+            loadMain(weather_array,city);
+        })
 
-        var oTxt = document.createTextNode(cities[i]);
-        option.appendChild(oTxt);
-
-        changeCity.appendChild(option);
-    }
-    return changeCity;
+        city_label.setAttribute("class","subcity");
+        city_temperature_label.setAttribute("class","temperaturemenu");
+        city_label.appendChild(city_name_label);
+        city_label.appendChild(city_temperature_label);
+        cities_div.appendChild(city_label)
+    });
+    cities_div.setAttribute("class","citymenudiv");
+    
+    body.appendChild(cities_div);
 }
+
