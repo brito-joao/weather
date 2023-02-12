@@ -12,7 +12,7 @@ export function loadMain(weather_array,city){
     const cloud_label=document.createElement("p");
     const menu_button=document.createElement("button");
     const github_button=document.createElement("a");
-    
+    const sunset_label=document.createElement("p");
 
     
     
@@ -24,25 +24,24 @@ export function loadMain(weather_array,city){
         "temperatureMax":`${Math.round(weather_array.main.temp_max-272.15)}°`,
         "feelsLike":`${Math.round(weather_array.main.feels_like-272.15)}°`,
         "windSpeed":Math.round(weather_array.wind.speed),
-        "clouds":weather_array.weather[0].description
+        "clouds":weather_array.weather[0].description,
+        "sunset":new Date(weather_array.sys.sunset*1000)
     }
     body.innerHTML="";
     city_label.innerText=city.name;
     image_city.src=city.image;
     menu_button.innerText="☰";
-    github_button.innerText="My Github";
-    github_button.href="https://github.com/brito-joao";
-    github_button.target="_blank";
-    github_button.rel="noopener noreferrer";
+    sunset_label.innerText=`Sunset today: 🌇${sunsetTime(temperature_object.sunset)}`;
 
 
-    github_button.setAttribute("class","gitbutton");
+    
     menu_button.setAttribute("class","menubutton");
     background.setAttribute("class","background");
     temperature_label.setAttribute("class","temperatureMain");
     city_label.setAttribute("class","city");
     window.setAttribute("class","window");
     weather_info_label.setAttribute("class","weather");
+    sunset_label.setAttribute("class","weather");
     feels_like_label.setAttribute("class","feels");
     cloud_label.setAttribute("class","feels");
     
@@ -55,7 +54,10 @@ export function loadMain(weather_array,city){
         },100);
     })
     
-    weather_info_label.innerText=`Today has ${temperature_object.clouds}, with temperatures reaching up to ${temperature_object.temperatureMax}. Winds will be light and variable. `;
+    let wind_condition;
+    temperature_object.windSpeed<5?wind_condition="Light":"Strong";
+    console.log(temperature_object.windSpeed);
+    weather_info_label.innerText=`Today has ${temperature_object.clouds}, with temperatures reaching up to ${temperature_object.temperatureMax}. Winds will be ${wind_condition}. `;
     cloud_label.innerText=`${temperature_object.clouds}`;
     feels_like_label.innerText=`H:${temperature_object.temperatureMax}   L:${temperature_object.temperatureMin}`;
     temperature_label.innerText=temperature_object.temperature;
@@ -67,7 +69,7 @@ export function loadMain(weather_array,city){
     window.appendChild(city_label);
 
     background.appendChild(weather_info_label);
-    background.appendChild(github_button);
+    background.appendChild(sunset_label);
     
 
     body.appendChild(window);
@@ -113,3 +115,10 @@ async function loadMenu(city){
     body.appendChild(cities_div);
 }
 
+function sunsetTime(date){
+    let hours=date.getHours();
+    let minutes="0"+date.getMinutes();
+    let formattedTime= hours + ":"+ minutes.substring(-2);
+    return formattedTime;
+
+}
