@@ -1,4 +1,4 @@
-import { getTemperature } from "./api";
+import { getTemperature, getCityTemperature } from "./api";
 
 export function loadMain(weather_array,city){
     const body= document.querySelector("body");
@@ -50,7 +50,7 @@ export function loadMain(weather_array,city){
         //body.style.transition = "height 3s ease-in";
         
         setTimeout(function(){
-            loadMenu(city);
+            loadMenu();
         },100);
     })
     
@@ -77,11 +77,17 @@ export function loadMain(weather_array,city){
     body.appendChild(background);
 }
 
-async function loadMenu(city){
+async function loadMenu(){
     const body = document.querySelector("body");
     const cities_div=document.createElement("div");
-    
-    
+    const search_bar=document.createElement("input");
+    const submit=document.createElement("button");
+
+
+
+
+    let city_info;
+
     let cities=["Lisbon","Alcochete","Paris","Brasilia","Faro"];
     body.innerHTML="";
 
@@ -104,6 +110,8 @@ async function loadMenu(city){
             loadMain(weather_array,city);
         })
 
+        
+
         city_label.setAttribute("class","subcity");
         city_temperature_label.setAttribute("class","temperaturemenu");
         city_label.appendChild(city_name_label);
@@ -111,7 +119,17 @@ async function loadMenu(city){
         cities_div.appendChild(city_label)
     });
     cities_div.setAttribute("class","citymenudiv");
-    
+    submit.addEventListener("click", ()=>{
+            city_info=getCity(search_bar.value);
+            const new_city=document.createElement("div");
+            const new_city_name=document.createElement("p");
+            const new_city_temperature=document.createElement("p");
+            new_city_name.innerText=city_info.name;
+            new_city_temperature=getCityTemperature(city_info.name);
+            
+        })
+    body.appendChild(search_bar);
+    body.appendChild(submit);
     body.appendChild(cities_div);
 }
 

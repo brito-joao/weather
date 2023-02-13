@@ -5,8 +5,8 @@ export async  function getTemperature(city){
     
     let weather_array=[];
     weather_array=await getTempApi(lat_long_array[0],lat_long_array[1]);
-    console.log("hlo",weather_array.main);
-
+    console.log("hlo",);
+    
     return weather_array;
 }
 
@@ -18,6 +18,7 @@ async function getTempApi(lat, long){
     const response= await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=${untitled}`,{mode: 'cors'});
     const data= await response.json();
     console.log(data);
+    
     return data;
 }
 function getCoordinate(city){
@@ -34,6 +35,31 @@ function getCoordinate(city){
     }
 
     city.image=city_latlong[city.name][2];
+    console.log(getCityTemperature("London"));
     return city_latlong[city.name];
     
 }
+
+export async function getCityTemperature(name){
+    let untitled="363097f69ad994cd0202332bce224c0a";
+    const response = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${name}&limit=${1}&appid=${untitled}`);
+    const data= await response.json();
+    const city_info={
+        "name":data[0].name,
+        "lat":data[0].lat,
+        "lon":data[0].lon
+    }
+
+    
+    const temperatures=await getCityTemperature(city_info);
+    console.log("afda",temperatures,"dadfafdfds");
+    return await temperatures;
+}
+async function getSubTemperatur(city_object){
+    const response=await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${city_object.lat}&lon=${city_object.lon}&appid=${"363097f69ad994cd0202332bce224c0a"}`);
+    const data= await response.json();
+    
+    return data;
+
+}
+
