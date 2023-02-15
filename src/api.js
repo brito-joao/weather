@@ -51,7 +51,7 @@ export async function getCityTemperature(name){
     }
 
     
-    const temperatures=await getCityTemperature(city_info);
+    const temperatures=await getSubTemperatur(city_info);
     console.log("afda",temperatures,"dadfafdfds");
     return await temperatures;
 }

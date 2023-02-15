@@ -90,7 +90,7 @@ async function loadMenu(){
 
     let cities=["Lisbon","Alcochete","Paris","Brasilia","Faro"];
     body.innerHTML="";
-
+    submit.innerText="Search";
     cities.forEach(async city_name => {
         console.log(city_name, "hello ");
         const city_label=document.createElement("div");
@@ -119,14 +119,22 @@ async function loadMenu(){
         cities_div.appendChild(city_label)
     });
     cities_div.setAttribute("class","citymenudiv");
+    submit.setAttribute("class","submitB");
+    search_bar.setAttribute("class","search");
     submit.addEventListener("click", ()=>{
-            city_info=getCity(search_bar.value);
+            city_info=getCityTemperature(search_bar.value);
             const new_city=document.createElement("div");
             const new_city_name=document.createElement("p");
             const new_city_temperature=document.createElement("p");
-            new_city_name.innerText=city_info.name;
-            new_city_temperature=getCityTemperature(city_info.name);
-            
+            new_city_name.innerText=search_bar.value;
+            console.log(city_info,search_bar.value);
+            new_city_temperature=`${Math.round(city_info.main.temp-272.15)}°`;
+
+            new_city.setAttribute("class","subcity");
+            new_city_temperature.setAttribute("class","temperaturemenu");
+            new_city.appendChild(new_city_name);
+            new_city.appendChild(new_city_temperature);
+            body.appendChild(new_city);
         })
     body.appendChild(search_bar);
     body.appendChild(submit);
