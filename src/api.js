@@ -42,7 +42,7 @@ function getCoordinate(city){
 
 export async function getCityTemperature(name){
     let untitled="363097f69ad994cd0202332bce224c0a";
-    const response = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${name}&limit=${1}&appid=${untitled}`);
+    const response = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${name}&limit=${1}&appid=${untitled}`);
     const data= await response.json();
     const city_info={
         "name":data[0].name,
