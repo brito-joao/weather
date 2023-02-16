@@ -31,7 +31,7 @@ export function loadMain(weather_array,city){
     city_label.innerText=city.name;
     image_city.src=city.image;
     menu_button.innerText="☰";
-    sunset_label.innerText=`Sunset today: 🌇${sunsetTime(temperature_object.sunset)}`;
+    sunset_label.innerText=`🌇 Sunset today: ${sunsetTime(temperature_object.sunset)}`;
 
 
     
@@ -88,7 +88,7 @@ async function loadMenu(){
 
     let city_info;
 
-    let cities=["Lisbon","Alcochete","Paris","Brasilia","Faro"];
+    let cities=["Alcochete","Paris","Brasilia"];
     body.innerHTML="";
     submit.innerText="Search";
     cities.forEach(async city_name => {
@@ -121,30 +121,63 @@ async function loadMenu(){
     cities_div.setAttribute("class","citymenudiv");
     submit.setAttribute("class","submitB");
     search_bar.setAttribute("class","search");
-    submit.addEventListener("click", ()=>{
-            city_info=getCityTemperature(search_bar.value);
-            const new_city=document.createElement("div");
-            const new_city_name=document.createElement("p");
-            const new_city_temperature=document.createElement("p");
-            new_city_name.innerText=search_bar.value;
-            console.log(city_info,search_bar.value);
-            new_city_temperature=`${Math.round(city_info.main.temp-272.15)}°`;
 
-            new_city.setAttribute("class","subcity");
-            new_city_temperature.setAttribute("class","temperaturemenu");
-            new_city.appendChild(new_city_name);
-            new_city.appendChild(new_city_temperature);
-            body.appendChild(new_city);
-        })
+    //when client clicks on the search button inside the menu
+    submit.addEventListener("click", async()=>{
+        console.log(search_bar.value,cities, "search bar value");
+        search_bar.value!= (null || undefined || "") && isSameCity(cities,search_bar.value)?onSubmit(search_bar,submit,city_info,cities_div,cities):{};
+        });
     body.appendChild(search_bar);
     body.appendChild(submit);
     body.appendChild(cities_div);
 }
 
 function sunsetTime(date){
-    let hours=date.getHours();
-    let minutes="0"+date.getMinutes();
-    let formattedTime= hours + ":"+ minutes.substring(-2);
+    let hours = date.getHours();
+    let minutes = date.getMinutes().toString().padStart(2, '0');
+    let formattedTime = hours + ":" + minutes;
     return formattedTime;
 
+}
+
+async function onSubmit(search_bar,submit,city_info,cities_div,cities){
+    city_info= await getCityTemperature(search_bar.value);
+    const new_city=document.createElement("div");
+    const new_city_name=document.createElement("p");
+    const new_city_temperature=document.createElement("p");
+
+
+    new_city_name.innerText=search_bar.value;
+
+    console.log(city_info,search_bar.value);
+    new_city_temperature.innerText=`${Math.round(city_info.main.temp-272.15)}°`;
+
+    new_city.setAttribute("class","subcity");
+    new_city_temperature.setAttribute("class","temperaturemenu");
+
+    new_city.addEventListener("click", ()=>{
+        let city={
+            "name":search_bar.value,
+            "image":""
+        }
+        city.image="./images/ryo-yoshitake-city-unsplash.jpg";
+        loadMain(city_info,city);
+    });
+    cities.push(search_bar.value.charAt(0).toUpperCase() + search_bar.value.slice(1).toLowerCase());
+    new_city.appendChild(new_city_name);
+    console.log(new_city_temperature,new_city_name,new_city);
+    new_city.appendChild(new_city_temperature);
+    cities_div.appendChild(new_city);
+}
+
+function isSameCity(cities,value){
+    let condition=true;
+    let city_name=value;
+    city_name = city_name.charAt(0).toUpperCase() + city_name.slice(1).toLowerCase();
+    cities.forEach((item)=>{
+        if(item==city_name){
+            condition=false;
+        }
+    })
+    return condition;
 }
